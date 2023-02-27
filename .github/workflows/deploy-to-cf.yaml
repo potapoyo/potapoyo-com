@@ -44,6 +44,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: dev-potapoyo-com # e.g. 'my-project'
+          projectName: potapoyo-com # e.g. 'my-project'
           directory: public # e.g. 'dist'
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
