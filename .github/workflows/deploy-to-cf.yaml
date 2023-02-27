@@ -9,6 +9,7 @@ jobs:
     permissions:
       contents: read
       deployments: write
+
     name: Deploy to Cloudflare Pages
     steps:
       - name: Checkout
@@ -17,8 +18,10 @@ jobs:
         with:
           node-version: latest
           cache: "npm"
+
       - name: Install
         run: npm ci
+
       - name: Caching Gatsby
         id: gatsby-cache-build
         uses: actions/cache@v2
@@ -29,13 +32,18 @@ jobs:
           key: ${{ runner.os }}-gatsby-build-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-gatsby-build-
+
       - name: npm build
         run: npm run build --if-present
+        env:
+           GATSBY_EXPERIMENTAL_PAGE_BUILD_ON_DATA_CHANGES: true
+           CI: true
+
       - name: Publish
         uses: cloudflare/pages-action@1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: potapoyo-com # e.g. 'my-project'
+          projectName: dev-potapoyo-com # e.g. 'my-project'
           directory: public # e.g. 'dist'
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
