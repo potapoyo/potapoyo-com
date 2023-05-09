@@ -44,7 +44,7 @@ const config: GatsbyConfig = {
           },
           {
             name: `Misskey`,
-            url: `https://virtualkemomimi.net/`,
+            url: `https://virtualkemomimi.net/@potapoyo`,
           },
         ],
         formatString: `YYYY-MM-DD`,
