@@ -1,0 +1,25 @@
+name: Check S3 Bucket Contents
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  list-s3-contents:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4.0.2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-1  # Replace with your region
+
+    - name: List S3 bucket contents
+      run: |
+        aws s3 ls s3://${{ env.AWS_BUCKET_NAME }} --endpoint-url https://${{ env.AWS_ENDPOINT_URL }}
