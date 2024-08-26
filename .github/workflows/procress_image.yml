@@ -1,4 +1,4 @@
-name: Check S3 Bucket Contents
+name: Procress Image
 
 on:
   workflow_dispatch:
