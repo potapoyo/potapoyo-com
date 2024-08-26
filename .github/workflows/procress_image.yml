@@ -8,7 +8,7 @@ env:
   AWS_BUCKET_NAME: assets.potapoyo.com/photo/202408/test_20240826
 
 jobs:
-  list-s3-contents:
+  image_to_webp:
     runs-on: ubuntu-latest
 
     steps:
