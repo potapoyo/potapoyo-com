@@ -30,8 +30,8 @@ jobs:
 
       - name: Install Dependencies Packages.
         run: |
-         apt update
-         apt install webp
+         apt-get update
+         apt-get -y install webp
 
       - name: AWS Configure
         run: |
