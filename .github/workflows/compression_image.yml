@@ -1,4 +1,4 @@
-name: Procress Image
+name: compression_image
 
 on:
   workflow_dispatch:
