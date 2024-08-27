@@ -2,10 +2,15 @@ name: compression_image
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choice bucket name and folder path.'
+        required: true
+        default: '202408/test_202408xx'
 
 env:
   AWS_ENDPOINT_URL: s3.ap-northeast-1.wasabisys.com
-  AWS_BUCKET_NAME: assets.potapoyo.com/photo/202408/test_20240826
+  AWS_BUCKET_NAME: assets.potapoyo.com/photo/${{ github.event.inputs.selected_environment }}
 
 jobs:
   image_to_webp:
@@ -23,7 +28,7 @@ jobs:
       #    sudo apt-get update
       #    sudo apt-get -y install awscli
 
-      - name: (Actions Only) Check AWS CLI
+      - name: Check AWS CLI
         run: |
           aws --version
 
@@ -41,7 +46,7 @@ jobs:
           # echo "[default]" > ~/.aws/config
           # echo "region = ap-northeast-1" > ~/.aws/config
           echo -e "[default]\nregion = ap-northeast-1" > ~/.aws/config
-          aws configure list
+          # aws configure list
 
       - name: List S3 bucket contents
         run: |
@@ -58,7 +63,6 @@ jobs:
 
       - name: Create Working Directory
         run: |
-          pwd
           mkdir -p workdir
 
       - name: Download Files from S3
@@ -67,8 +71,6 @@ jobs:
 
       - name: Convert Images to WebP
         run: |
-          pwd
-        
           if [ -d workdir ] && ([ "$(ls -A workdir/*.jpg 2>/dev/null)" ] || [ "$(ls -A workdir/*.png 2>/dev/null)" ]); then
             for img in workdir/*.{jpg,png}; do
               [ -e "$img" ] || continue
