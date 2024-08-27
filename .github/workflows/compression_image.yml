@@ -10,7 +10,7 @@ on:
 
 env:
   AWS_ENDPOINT_URL: s3.ap-northeast-1.wasabisys.com
-  AWS_BUCKET_NAME: assets.potapoyo.com/photo/${{ github.event.inputs.selected_environment }}
+  AWS_BUCKET_NAME: assets.potapoyo.com/photo/${{ github.event.inputs.environment }}
 
 jobs:
   image_to_webp:
