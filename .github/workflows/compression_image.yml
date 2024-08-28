@@ -11,6 +11,7 @@ on:
 env:
   AWS_ENDPOINT_URL: s3.ap-northeast-1.wasabisys.com
   AWS_BUCKET_NAME: assets.potapoyo.com/photo/${{ github.event.inputs.environment }}
+  #AWS_BUCKET_NAME: assets.potapoyo.com/photo/202408/test_20240826 # act Debug Only
 
 jobs:
   image_to_webp:
@@ -23,7 +24,7 @@ jobs:
           python-version: "3.8"
           architecture: "x64"
 
-      # - name: (act Only) Install Dependencies Packages.
+      #- name: (act Only) Install Dependencies Packages.
       #  run: |
       #    sudo apt-get update
       #    sudo apt-get -y install awscli
@@ -74,7 +75,7 @@ jobs:
           if [ -d workdir ] && ([ "$(ls -A workdir/*.jpg 2>/dev/null)" ] || [ "$(ls -A workdir/*.png 2>/dev/null)" ]); then
             for img in workdir/*.{jpg,png}; do
               [ -e "$img" ] || continue
-              cwebp -resize 1024 0 "$img" -o workdir/$(basename "$img" | sed 's/\.[^.]*$//').webp
+              cwebp -resize 1024 0 -lossless -m 4 -f 60 -sharpness 0 "$img" -o workdir/$(basename "$img" | sed 's/\.[^.]*$//').webp
             done
           else
             echo "No image files found in workdir."
