@@ -12,6 +12,7 @@ env:
   AWS_ENDPOINT_URL: s3.ap-northeast-1.wasabisys.com
   AWS_BUCKET_NAME: assets.potapoyo.com/photo/${{ github.event.inputs.environment }}
   #AWS_BUCKET_NAME: assets.potapoyo.com/photo/202408/test_20240826 # act Debug Only
+  ASSETS_SERVER_URL: https://assets.potapoyo.com
 
 jobs:
   image_to_webp:
@@ -86,17 +87,30 @@ jobs:
         run: |
           aws s3 sync --endpoint-url https://$AWS_ENDPOINT_URL workdir s3://$AWS_BUCKET_NAME/ --exclude "*" --include "*.webp"
 
-      - name: Format S3 URLs
+      - name: Clean and Format S3 URLs
         run: |
-          aws s3 ls --recursive --endpoint-url https://$AWS_ENDPOINT_URL $AWS_BUCKET_NAME/ > s3_output.txt
-          declare -A file_dict
+          # ファイルパスのみを抽出
+          aws s3 ls --recursive --endpoint-url https://$AWS_ENDPOINT_URL $AWS_BUCKET_NAME/ | awk '{print $4}' > s3_cleaned_output.txt
+          
+          # .webp と .jpg ファイルを区別して配列に格納
+          declare -a webp_files
+          declare -a jpg_files
+          
           while read -r line; do
-            if [[ $line =~ ([^[:space:]]+\.[^[:space:]]+)$ ]]; then
-              filename="${BASH_REMATCH[1]}"
-              extension="${filename##*.}"
-              file_dict[$extension]+="${filename}\n"
+            if [[ $line == *.webp ]]; then
+              webp_files+=("$ASSETS_SERVER_URL/$line")
+            elif [[ $line == *.jpg ]]; then
+              jpg_files+=("https://assets.potapoyo.com/$line")
             fi
-          done < s3_output.txt
-          for ext in "${!file_dict[@]}"; do
-            printf "${file_dict[$ext]}"
+          done < s3_cleaned_output.txt
+          
+          # 並べ替えた結果を出力
+          echo "JPEG Files:"
+          for jpg in "${jpg_files[@]}"; do
+            echo "$jpg"
+          done
+          
+          echo "WebP Files:"
+          for webp in "${webp_files[@]}"; do
+            echo "$webp"
           done
