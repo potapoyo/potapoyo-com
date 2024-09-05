@@ -69,7 +69,7 @@ jobs:
 
       - name: Download Files from S3
         run: |
-          aws s3 sync --endpoint-url https://$AWS_ENDPOINT_URL s3://$AWS_BUCKET_NAME/ workdir --exclude "*" --include "*.jpg" --include "*.png"
+          aws s3 sync --endpoint-url https://$AWS_ENDPOINT_URL s3://$AWS_BUCKET_NAME/ ./workdir --exclude "*" --include "*.jpg" --include "*.png"
 
       - name: Convert Images to WebP
         run: |
