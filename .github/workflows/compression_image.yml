@@ -11,7 +11,6 @@ on:
 env:
   AWS_ENDPOINT_URL: s3.ap-northeast-1.wasabisys.com
   AWS_BUCKET_NAME: assets.potapoyo.com/photo/${{ github.event.inputs.environment }}
-  #AWS_BUCKET_NAME: assets.potapoyo.com/photo/202408/test_20240826 # act Debug Only
   ASSETS_SERVER_URL: https://assets.potapoyo.com
 
 jobs:
@@ -24,11 +23,6 @@ jobs:
         with:
           python-version: "3.8"
           architecture: "x64"
-
-      #- name: (act Only) Install Dependencies Packages.
-      #  run: |
-      #    sudo apt-get update
-      #    sudo apt-get -y install awscli
 
       - name: Check AWS CLI
         run: |
@@ -45,10 +39,7 @@ jobs:
           echo "[default]" > ~/.aws/credentials
           echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
           echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
-          # echo "[default]" > ~/.aws/config
-          # echo "region = ap-northeast-1" > ~/.aws/config
           echo -e "[default]\nregion = ap-northeast-1" > ~/.aws/config
-          # aws configure list
 
       - name: List S3 bucket contents
         run: |
@@ -56,7 +47,7 @@ jobs:
 
       - name: Check for .webp files in S3
         run: |
-          if aws s3 ls --recursive --endpoint-url https://$AWS_ENDPOINT_URL $AWS_BUCKET_NAME/ | grep '\.webp$'; then
+          if aws s3 ls --recursive --endpoint-url https://$AWS_ENDPOINT_URL $AWS_BUCKET_NAME/ | grep -iE '\.webp$'; then
             echo "Error: .webp files found in the bucket"
             exit 1
           else
@@ -73,10 +64,10 @@ jobs:
 
       - name: Convert Images to WebP
         run: |
-          if [ -d workdir ] && ([ "$(ls -A workdir/*.jpg 2>/dev/null)" ] || [ "$(ls -A workdir/*.png 2>/dev/null)" ]); then
-            for img in workdir/*.{jpg,png}; do
-              [ -e "$img" ] || continue
-              cwebp -resize 1024 0 -lossless -m 4 -f 60 -sharpness 0 "$img" -o workdir/$(basename "$img" | sed 's/\.[^.]*$//').webp
+          shopt -s nullglob
+          if [ -d workdir ] && (ls workdir/*.{jpg,JPG,png,PNG} >/dev/null 2>&1); then
+            for img in workdir/*.{jpg,JPG,png,PNG}; do
+              cwebp -resize 1024 0 -lossless -m 4 -f 60 -sharpness 0 "$img" -o workdir/$(basename "${img%.*}").webp
             done
           else
             echo "No image files found in workdir."
@@ -89,23 +80,20 @@ jobs:
 
       - name: Clean and Format S3 URLs
         run: |
-          # ファイルパスのみを抽出
           aws s3 ls --recursive --endpoint-url https://$AWS_ENDPOINT_URL $AWS_BUCKET_NAME/ | awk '{print $4}' > s3_cleaned_output.txt
           
-          # .webp と .jpg ファイルを区別して配列に格納
           declare -a webp_files
           declare -a jpg_files
           
           while read -r line; do
-            if [[ $line == *.webp ]]; then
+            if [[ $line =~ \.webp$ ]]; then
               webp_files+=("$ASSETS_SERVER_URL/$line")
-            elif [[ $line == *.jpg ]]; then
+            elif [[ $line =~ \.(jpg|JPG|png|PNG)$ ]]; then
               jpg_files+=("https://assets.potapoyo.com/$line")
             fi
           done < s3_cleaned_output.txt
           
-          # 並べ替えた結果を出力
-          echo "JPEG Files:"
+          echo "JPEG/PNG Files:"
           for jpg in "${jpg_files[@]}"; do
             echo "$jpg"
           done
