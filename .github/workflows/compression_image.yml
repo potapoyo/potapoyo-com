@@ -9,8 +9,8 @@ on:
         default: '202408/test_202408xx'
 
 env:
-  AWS_ENDPOINT_URL: s3.ap-northeast-1.wasabisys.com
-  AWS_BUCKET_NAME: assets.potapoyo.com/photo/${{ github.event.inputs.environment }}
+  AWS_ENDPOINT_URL: 0a834125d48e82f09501f6cac4e574f3.r2.cloudflarestorage.com
+  AWS_BUCKET_NAME: assets-potapoyo-com/photo/${{ github.event.inputs.environment }}
   ASSETS_SERVER_URL: https://assets.potapoyo.com
 
 jobs:
