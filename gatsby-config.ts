@@ -17,7 +17,7 @@ const config: GatsbyConfig = {
     siteLanguage: `ja`,
     author: `@potapoyo`,
   },
-  trailingSlash: `never`,
+  trailingSlash: `always`,
   plugins: [
     {
       resolve: `@lekoarts/gatsby-theme-minimal-blog`,
