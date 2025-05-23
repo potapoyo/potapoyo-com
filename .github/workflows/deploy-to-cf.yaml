@@ -40,12 +40,8 @@ jobs:
            GATSBY_EXPERIMENTAL_PAGE_BUILD_ON_DATA_CHANGES: true
            CI: true
 
-      - name: Wrangler Auth
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          
       - name: Publish to Cloudflare Pages
         run: npx wrangler pages deploy ./public --project-name=potapoyo-com --branch=master
         env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
