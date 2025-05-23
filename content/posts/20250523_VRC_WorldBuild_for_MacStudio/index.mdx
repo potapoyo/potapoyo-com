@@ -1,0 +1,36 @@
+---
+title: Mac でVRChat ワールドのビルドを試す
+slug: "/VRC_WorldBuild_for_MacStudio"
+date: 2025-05-23
+description: 2024年に買って良かった物をまとめます。
+tags:
+- 2025-05
+- Mac
+- VRChat
+- Unity
+# banner: ./
+---
+M1 Max でメモリ32GB の MacStudio を借りることができたので、ワールドのビルドについて試しています。
+
+下記のページを参考に、Unity、ALCOMを導入して、Unity でぽたホテルのワールドをビルドする時間を確認しました。\
+[Mac環境でUnity for VRChatする｜きくじん](https://note.com/kikjin/n/nc6b72d74056d?sub_rt=share_pw)
+
+ただ、AppleSilicon版ではiOS版のビルドができず、iOS版をビルドしない場合は、iOSで iwaSync3 の動画が表示されません。（ちなみに今のところ音は何やっても出ない）
+
+そのため、Intel版をRosettaで動かすことになるんですが、当然に遅く…
+
+i7-12700 メモリ32GBのマシンと比べてWindowsビルドを行った場合、
+
+```text
+Win機: 00:57.28
+Mac(AppleSilicon):1:07.11
+Mac(Rosetta):1:32.55
+```
+
+という感じで遅くなっていく。
+
+最新のMac Studioだとまた違うかもしれませんね。
+
+あと、テクスチャがなんかおかしくなるとかあるらしいですね。\
+（これはグラフィックAPIの問題らしい）\
+[Mac環境で困ることとその対策 | Mac環境でUnity for VRChatする｜きくじん](https://note.com/kikjin/n/nc6b72d74056d#07bf948d-5698-4d4c-b836-1ed5c09f2c1d)
