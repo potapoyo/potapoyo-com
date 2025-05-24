@@ -54,12 +54,6 @@ const config: GatsbyConfig = {
       resolve: `gatsby-plugin-twitter`
     },
     {
-      resolve: `gatsby-plugin-google-adsense`,
-      options: {
-        publisherId: `ca-pub-3876032587960938`,
-      },
-    },
-    {
       resolve: `gatsby-plugin-sitemap`,
       options: {
         output: `/`,
