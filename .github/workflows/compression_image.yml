@@ -61,6 +61,7 @@ jobs:
           aws s3 sync --endpoint-url https://$AWS_ENDPOINT_URL s3://$AWS_BUCKET_NAME/ ./workdir --exclude "*" --include "*.jpg" --include "*.JPG" --include "*.png" --include "*.PNG"
 
       - name: Convert Images to WebP
+        shell: bash
         run: |
           shopt -s nullglob
           # Check if there are any image files to convert
