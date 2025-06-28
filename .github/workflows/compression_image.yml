@@ -41,6 +41,10 @@ jobs:
          sudo apt-get update
          sudo apt-get -y install webp
 
+      - name: Fix cache permissions
+        run: |
+          sudo chown -R $(whoami) /var/cache/apt/archives
+
       - name: AWS Configure
         run: |
           mkdir -p ~/.aws
