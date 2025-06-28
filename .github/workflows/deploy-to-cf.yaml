@@ -13,11 +13,11 @@ jobs:
     name: Deploy to Cloudflare Pages
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: "npm"
+          node-version: 22
+          cache: 'npm'
 
       - name: Install
         run: npm ci
@@ -39,11 +39,8 @@ jobs:
            GATSBY_EXPERIMENTAL_PAGE_BUILD_ON_DATA_CHANGES: true
            CI: true
 
-      - name: Publish
-        uses: cloudflare/pages-action@1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: potapoyo-com # e.g. 'my-project'
-          directory: public # e.g. 'dist'
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish to Cloudflare Pages
+        run: npx wrangler pages deploy ./public --project-name=potapoyo-com --branch=master
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
