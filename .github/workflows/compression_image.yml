@@ -80,6 +80,7 @@ jobs:
           aws s3 sync --endpoint-url https://$AWS_ENDPOINT_URL workdir s3://$AWS_BUCKET_NAME/ --exclude "*" --include "*.webp"
 
       - name: Clean and Format S3 URLs
+        shell: bash
         run: |
           aws s3 ls --recursive --endpoint-url https://$AWS_ENDPOINT_URL $AWS_BUCKET_NAME/ | awk '{print $4}' > s3_cleaned_output.txt
           
