@@ -28,10 +28,18 @@ jobs:
         run: |
           aws --version
 
+      - name: Cache webp
+        id: cache-webp
+        uses: actions/cache@v4
+        with:
+          path: /usr/bin/cwebp
+          key: ${{ runner.os }}-webp
+
       - name: Install Dependencies Packages.
+        if: steps.cache-webp.outputs.cache-hit != 'true'
         run: |
          sudo apt-get update
-         sudo apt-get -y install webp 
+         sudo apt-get -y install webp
 
       - name: AWS Configure
         run: |
