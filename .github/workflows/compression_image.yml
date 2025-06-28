@@ -12,46 +12,30 @@ env:
   AWS_ENDPOINT_URL: 0a834125d48e82f09501f6cac4e574f3.r2.cloudflarestorage.com
   AWS_BUCKET_NAME: assets-potapoyo-com/photo/${{ github.event.inputs.environment }}
   ASSETS_SERVER_URL: https://assets.potapoyo.com
+  # Pass secrets as env vars to the container for all steps
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   image_to_webp:
     runs-on: ubuntu-latest
+    # Run all steps in a dedicated Docker container
+    container:
+      image: python:3.8-slim
 
     steps:
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.8"
-          architecture: "x64"
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Check AWS CLI
+      - name: Install Dependencies
         run: |
-          aws --version
-
-      - name: Cache apt packages
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/apt/archives
-          key: ${{ runner.os }}-apt-webp-cache
-          restore-keys: |
-            ${{ runner.os }}-apt-webp-cache
-
-      - name: Install Dependencies Packages.
-        run: |
-         sudo apt-get update
-         sudo apt-get -y install webp
-
-      - name: Fix cache permissions
-        run: |
-          sudo chown -R $(whoami) /var/cache/apt/archives
+          apt-get update && apt-get install -y --no-install-recommends webp awscli
 
       - name: AWS Configure
         run: |
-          mkdir -p ~/.aws
-          echo "[default]" > ~/.aws/credentials
-          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
-          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
-          echo -e "[default]\nregion = auto" > ~/.aws/config
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set default.region auto
 
       - name: List S3 bucket contents
         run: |
@@ -59,8 +43,10 @@ jobs:
 
       - name: Check for .webp files in S3
         run: |
+          # The grep command will exit with 1 if no match is found, which is what we want.
+          # We invert the result, so it fails if webp files ARE found.
           if aws s3 ls --recursive --endpoint-url https://$AWS_ENDPOINT_URL $AWS_BUCKET_NAME/ | grep -iE '\.webp$'; then
-            echo "Error: .webp files found in the bucket"
+            echo "Error: .webp files found in the bucket. Please remove them before running this workflow."
             exit 1
           else
             echo "No .webp files found. Proceeding..."
@@ -77,12 +63,14 @@ jobs:
       - name: Convert Images to WebP
         run: |
           shopt -s nullglob
-          if [ -d workdir ] && (ls workdir/*.{jpg,JPG,png,PNG} >/dev/null 2>&1); then
-            for img in workdir/*.{jpg,JPG,png,PNG}; do
+          # Check if there are any image files to convert
+          images=(workdir/*.{jpg,JPG,png,PNG})
+          if [ ${#images[@]} -gt 0 ]; then
+            for img in "${images[@]}"; do
               cwebp -resize 1024 0 -lossless -m 4 -f 60 -sharpness 0 "$img" -o workdir/$(basename "${img%.*}").webp
             done
           else
-            echo "No image files found in workdir."
+            echo "No image files found in workdir to convert."
             exit 1
           fi
 
