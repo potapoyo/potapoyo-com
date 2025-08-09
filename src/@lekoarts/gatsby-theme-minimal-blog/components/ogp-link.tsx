@@ -8,8 +8,7 @@ interface OgpData {
 
 const fetchOgp = async (url: string): Promise<OgpData> => {
   try {
-    const target = url.replace(/^https?:\/\//, "")
-    const res = await fetch(`https://r.jina.ai/https://${target}`)
+    const res = await fetch(`https://r.jina.ai/${url}`)
     const html = await res.text()
     const parser = new DOMParser()
     const doc = parser.parseFromString(html, "text/html")
