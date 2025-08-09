@@ -8,7 +8,8 @@ import OgpLink from "./ogp-link"
 const MdxComponents = {
   Text: (props: any) => <Text {...props} />,
   Title: (props: any) => <Title {...props} />,
-  a: (props: any) => <OgpLink {...props} />,
+  a: ({ title, ...rest }: any) =>
+    title === "ogp" ? <OgpLink {...rest} /> : <a title={title} {...rest} />,
   pre: (preProps: any) => {
     const props = preToCodeBlock(preProps)
     if (props) {
