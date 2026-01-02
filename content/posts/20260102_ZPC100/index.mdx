@@ -49,6 +49,8 @@ ZUNDA DEV ROUTER (ZPC100) を OpenWRT で v6プラスに接続して使いまし
 
 [![](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/thumb_IMG_3276.webp)](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/IMG_3276.jpg)
 
+-----------
+
 ## 筐体を開けてメモリ・SSDを装着
 
 背面のプラスねじ二つを開けると、内部にアクセスできます。\
@@ -58,6 +60,8 @@ ZUNDA DEV ROUTER (ZPC100) を OpenWRT で v6プラスに接続して使いまし
 [![](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/thumb_IMG_3280.webp)](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/IMG_3280.jpg)
 
 取り付けが終わったら、元に戻します。
+
+-----------
 
 ## OpenWRTのインストール
 ### 事前
@@ -72,6 +76,8 @@ ZUNDA DEV ROUTER (ZPC100) を OpenWRT で v6プラスに接続して使いまし
 
 + 初回、ZUNDA DEV ROUTER を起動するときに、[製造元のWikiにある「UEFIの設定を変更する」](https://wiki.zunda.co.jp/ja/connect/dev-router/vyos-setup-guide#uefi%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E5%A4%89%E6%9B%B4%E3%81%99%E3%82%8B)を見て、設定しました。
   + この時に、メモリとSSDが認識されていることも確認します。
+
+-----------
 
 ### インストール
 
@@ -112,6 +118,8 @@ ZUNDA DEV ROUTER (ZPC100) を OpenWRT で v6プラスに接続して使いまし
 
 + 書き込みができたら、再起動を行ってSSDからブートすると、OpenWRTで起動します。
 
+-----------
+
 ## OpenWRT 設定のポイント
 
 + OpenWRT の設定ですが、各自それぞれの回線だと思うので、それぞれ調べていただくとして、自分の環境のメモを書いておきます。
@@ -136,6 +144,8 @@ ZUNDA DEV ROUTER (ZPC100) を OpenWRT で v6プラスに接続して使いまし
 
 ここまででとりあえず、2.5GbEのルータとして動きました。
 
+-----------
+
 ## 後日、10G BASE-T SFP+モジュールを追加
 
 このZPC100のRJ-45のポートは 2.5GbEですが、SFP+が取り付けられるので、並行して 10GBase-T のSFP+モジュールも探しました。
@@ -154,6 +164,8 @@ ZUNDA DEV ROUTER (ZPC100) を OpenWRT で v6プラスに接続して使いまし
 
       + 注文したら、「ベンダーロックインがあり得るので、どの機器にさしますか？」と聞いてきてくれてえらい！ポイント高かった。
 
+-----------
+
 ### 届いた
 \
 [![](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/thumb_IMG_3388.webp)](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/IMG_3388.JPG)
@@ -164,6 +176,8 @@ ZUNDA DEV ROUTER (ZPC100) を OpenWRT で v6プラスに接続して使いまし
 
   + これでインターフェースのデバイスをSFP+のものに置き換えればいいのかな、と思ったのですが、何かうまくいかなかったので、wan6 のインターフェースを再作成して対応しました。
 
+-----------
+
 ## 速度
 
 + NTTのHGWの10Gポートに直結したときとそう変わらない速度が出て満足です。
@@ -171,6 +185,8 @@ ZUNDA DEV ROUTER (ZPC100) を OpenWRT で v6プラスに接続して使いまし
 [![](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/2026-01-02_150800.webp)](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/2026-01-02_150800.png)
 
 + あと、ぶいちゃをVirtual Desktopで使っているときにたびたびカクついていたのがちょっとマシになっているような、、、気のせいかも。
+
+-----------
 
 ## まとめ
 
@@ -181,5 +197,6 @@ ZUNDA DEV ROUTER (ZPC100) を OpenWRT で v6プラスに接続して使いまし
 
 [![](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/thumb_IMG_3389.webp)](https://assets.potapoyo.com/photo/202601/20260102_ZPC100/IMG_3389.jpg)
 
+-----------
 \
 <a href="#">ページトップへ戻る</a>
